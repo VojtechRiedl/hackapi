@@ -14,4 +14,16 @@ class MariaSettings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
-        
+    
+class MqttSettings(BaseSettings):
+    host: str
+    port: int
+    username: str
+    password: str
+    
+    class Config:
+        extra = "allow"
+        env_prefix = 'MQTT_'
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        case_sensitive = False    
