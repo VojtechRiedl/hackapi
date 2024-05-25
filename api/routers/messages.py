@@ -25,7 +25,7 @@ def get_messages(start_date: datetime, end_date: datetime, path: str | None = ""
     return crud.get_messages(db, f"/{path}", end_date=end_date, start_date=start_date)
 
 @router.get("/count", summary="Get message count", response_model=MessageStatus)
-def get_message_count(start_date: datetime, end_date: datetime, path: str | None = "" , db: Session = Depends(get_db)):
+def get_message_status(start_date: datetime, end_date: datetime, path: str | None = "" , db: Session = Depends(get_db)):
     
     if not start_date:
         raise HTTPException(status_code=400, detail="Start date is required")
@@ -36,4 +36,8 @@ def get_message_count(start_date: datetime, end_date: datetime, path: str | None
     if start_date > end_date:
         raise HTTPException(status_code=400, detail="Start date is greater than end date")
     
-    return crud.get_message_count(db, f"/{path}", end_date=end_date, start_date=start_date)
+    response = crud.get_message_status(db, f"/{path}", end_date=end_date, start_date=start_date)
+    
+    if not response:
+        raise HTTPException(status_code=404, detail="No messages found")
+    return response

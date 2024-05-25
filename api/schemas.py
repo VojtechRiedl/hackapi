@@ -13,6 +13,7 @@ class Message(BaseModel):
 class MessageStatus(BaseModel):
 
     count: int
+    size: int
 
     model_config = ConfigDict(from_attributes=True)
 

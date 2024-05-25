@@ -28,7 +28,11 @@ def get_topics(db: Session, topic: str):
 def get_messages(db: Session, path: str, start_date: datetime, end_date: datetime):
     messages = db.query(func.count(Messages.id).label("message_count"),Messages.date.label("date"), func.sum(Messages.size).label('size')).filter(Messages.topic.like(f"{path}%")).filter(Messages.date >= start_date).filter(Messages.date <= end_date).group_by(Messages.date).all()
     
-    if not messages:
+    print(messages)
+    
+    
+    if len(messages) == 0:
+        print("No messages found")
         return None
     
     mess = []
@@ -39,7 +43,14 @@ def get_messages(db: Session, path: str, start_date: datetime, end_date: datetim
     
     return mess
 
-def get_message_count(db: Session, path: str, start_date: datetime, end_date: datetime):
-    message_count = db.query(Message).filter(Messages.topic.like(f"{path}%")).filter(Messages.date >= start_date).filter(Messages.date <= end_date).count()
+def get_message_status(db: Session, path: str, start_date: datetime, end_date: datetime):
+    message_count_total = db.query(Messages.id).filter(Messages.topic.like(f"{path}%")).filter(Messages.date >= start_date).filter(Messages.date <= end_date).count()
     
-    return MessageStatus(count=message_count)
+    if not message_count_total:
+        return None
+    message_size = db.query(func.sum(Messages.size).label("size")).filter(Messages.topic.like(f"{path}%")).filter(Messages.date >= start_date).filter(Messages.date <= end_date).scalar()
+    
+    if not message_size:
+        return None
+    
+    return MessageStatus(count=message_count_total, size=message_size)
