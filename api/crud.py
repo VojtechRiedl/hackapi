@@ -3,13 +3,8 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from .schemas import Message, MessageStatus
-from .mqtt import fast_mqtt
 import random
-import json
 import time
-import paho.mqtt.client as mqtt
-from .settings import MqttSettings
-import ssl
 
 
 
