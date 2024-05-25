@@ -27,3 +27,13 @@ class MqttSettings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False    
+    
+class Settings(BaseSettings):
+    key: str
+    
+    class Config:
+        extra = "allow"
+        env_prefix = 'APP_'
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        case_sensitive = False

@@ -33,7 +33,7 @@ def connect(client, flags, rc, properties):
     print("Connected: ", client, flags, rc, properties)
 
 @fast_mqtt.on_message()
-async def message(client, topic, payload, qos, properties):    
+async def message(client, topic, payload, qos, properties):   
     session = get_session()
     try:
         # Create a new message instance        
@@ -55,5 +55,5 @@ def disconnect(client, packet, exc=None):
     print("Disconnected")
 
 @fast_mqtt.on_subscribe()
-def subscribe(client, mid, qos, properties):
+def subscribe(client, mid, qos, properties):    
     print("subscribed", client, mid, qos, properties)
