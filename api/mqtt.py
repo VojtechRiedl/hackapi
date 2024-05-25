@@ -1,19 +1,15 @@
-from contextlib import asynccontextmanager
 
 from fastapi_mqtt import FastMQTT, MQTTConfig
-from sqlalchemy.ext.asyncio import AsyncSession
-from .models import Messages
-import asyncio
 from sqlalchemy.exc import IntegrityError
+import asyncio
 
-
-from sqlalchemy.orm import Session
 import ssl
 from gmqtt.mqtt.constants import MQTTv311
 from .settings import MqttSettings
 
-from .schemas import MessageCreate
 from . import crud
+from .database import get_session
+from .models import Messages
 
 mqqt_settings = MqttSettings()
 
@@ -38,8 +34,21 @@ def connect(client, flags, rc, properties):
 
 @fast_mqtt.on_message()
 async def message(client, topic, payload, qos, properties):    
-    pass
-
+    session = get_session()
+    try:
+        # Create a new message instance        
+        message = Messages(
+            size=len(payload),
+            topic=topic
+        )
+        session.add(message)
+        session.commit()
+        # print(f"Message added to DB: {message}")
+    except Exception as e:
+        session.rollback()
+        print(f"Failed to add message to DB: {e}")
+    finally:
+        session.close()
 
 @fast_mqtt.on_disconnect()
 def disconnect(client, packet, exc=None):

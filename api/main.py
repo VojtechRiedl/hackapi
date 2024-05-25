@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import engine
 from . import models
-from .routers import topics
+from .routers import topics, messages
 
 from . import mqtt
 
@@ -16,6 +16,7 @@ if __name__ == "__main__":
                 port=8000,
                 reload=True,
     )
+    
 
 app = FastAPI(
     debug=True,
@@ -26,7 +27,7 @@ app = FastAPI(
     )
 
 mqtt.fast_mqtt.init_app(app)
-"""
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,7 +35,8 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PATCH", "DELETE"],
     allow_headers=["*"],
 )
-"""
+
 
 app.include_router(topics.router)
+app.include_router(messages.router)
     

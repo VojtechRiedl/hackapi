@@ -1,17 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
+from ..database import get_db
+from typing import Optional
+
 
 from .. import crud
 
-router = APIRouter(prefix="/topics", tags=["Ideas"])
+router = APIRouter(prefix="/topics", tags=["Topics"])
 
 @router.get("/", summary="Get all topics")
-def get_topics():
-    return {"message": "Get all topics"}
+def get_topics(path: str | None = "" ,db: Session = Depends(get_db)):
+    return crud.get_topics(db, f"/{path}")
 
-"""
-@router.post("/add_topic", summary="Add a topic")
-def add_topic(db: Session = Depends(get_db)):
-    return {"message": "Add a topic"}
-    
-"""

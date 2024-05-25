@@ -1,9 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+from typing import List
+from decimal import Decimal
+class Message(BaseModel):
 
-
-#class MessageCreate(BaseModel):
-    
-class MessageCreate(BaseModel):
-    topic: str
+    count: int
+    date: datetime
     size: int
 
+    model_config = ConfigDict(from_attributes=True)
+
+class MessageStatus(BaseModel):
+
+    count: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+    
